@@ -1,0 +1,14 @@
+name: Keep Filler Awake
+
+on:
+  schedule:
+    - cron: '30 17 * * 1-5'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: mikeesto/heroku-awake@1.0.0
+        with:
+          URL: 'https://investifyfiller.herokuapp.com/'
