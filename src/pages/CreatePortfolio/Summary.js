@@ -95,32 +95,34 @@ const Summary = () => {
           <h3 className="text-center font-weight-light text-capitalize">
             {fundData.frequency}
           </h3>
-          <Pie
-            data={{
-              labels: stockSymbols,
-              datasets: [
-                {
-                  data: stockSymbols.map((s) => fundData.stocks[s]),
-                  label: 'Fund Composition',
-                },
-              ],
-            }}
-            options={{
-              plugins: {
-                colorschemes: {
-                  scheme: PastelOne9,
-                },
-              },
-              tooltips: {
-                callbacks: {
-                  label: (item) => {
-                    const symbol = stockSymbols[item.index];
-                    return `${symbol}: $${fundData.stocks[symbol]}`;
+          <div>
+            <Pie
+              data={{
+                labels: stockSymbols,
+                datasets: [
+                  {
+                    data: stockSymbols.map((s) => fundData.stocks[s]),
+                    label: 'Fund Composition',
+                  },
+                ],
+              }}
+              options={{
+                plugins: {
+                  colorschemes: {
+                    scheme: PastelOne9,
                   },
                 },
-              },
-            }}
-          />
+                tooltips: {
+                  callbacks: {
+                    label: (item) => {
+                      const symbol = stockSymbols[item.index];
+                      return `${symbol}: $${fundData.stocks[symbol]}`;
+                    },
+                  },
+                },
+              }}
+            />
+          </div>
           <div className="text-center">
             <Button
               className="mt-4"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router';
 import {
   Badge,
@@ -36,8 +36,17 @@ const AssignAmount = () => {
     return;
   }
 
+  const mountedRef = useRef(false);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
   const [distributions, setDistributions] = useState(fundData.stocks);
   const updateDistribution = (symbol, amount) => {
+    if (!mountedRef.current) return;
     const newState = Object.assign({}, distributions, {
       [symbol]: parseInt(amount),
     });
@@ -45,6 +54,7 @@ const AssignAmount = () => {
   };
   const [tempDis, setTempDis] = useState({});
   const updateTempDis = (symbol, val) => {
+    if (!mountedRef.current) return;
     const newState = Object.assign({}, tempDis, { [symbol]: val });
     setTempDis(newState);
   };
