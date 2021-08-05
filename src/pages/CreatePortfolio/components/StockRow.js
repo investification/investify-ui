@@ -10,6 +10,15 @@ const StockRow = ({ symbol, added, addFn, removeFn }) => {
   return (
     <tr>
       <th scope="row">{symbol}</th>
+      <td
+        style={{
+          maxWidth: '20vw',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }}
+      >
+        {performances[symbol].name}
+      </td>
       <td>{performances[symbol].current}</td>
       <td>
         <i

@@ -197,36 +197,38 @@ function DiscoverPage() {
         <Container className="mt--7" fluid>
           <Row className="mt-5">
             <Col className="mb-5 mb-xl-0" xs="12">
-              {shownStocks && shownStocks.length > 0 && (
-                <Card className="shadow">
-                  <InfiniteScroll
-                    dataLength={stocksOffset}
-                    next={fetchNext}
-                    hasMore={hasMore}
-                  >
-                    <Table
-                      className="align-items-center table-flush"
-                      responsive
-                    >
-                      <thead className="thead-light">
-                        <tr>
-                          <th scope="col">Symbol</th>
-                          <th scope="col">Name</th>
-                          <th scope="col">Price</th>
-                          <th scope="col">Today P/L</th>
-                          <th scope="col" style={{ width: '1px' }} />
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {shownStocks.map((s) => (
-                          <StockRow symbol={s} key={s} />
-                        ))}
-                      </tbody>
-                    </Table>
-                  </InfiniteScroll>
-                </Card>
-              )}
-              {isLoading && <Loader />}
+              <InfiniteScroll
+                dataLength={stocksOffset}
+                next={fetchNext}
+                hasMore={hasMore}
+              >
+                <div style={{ minHeight: '70vh' }}>
+                  {shownStocks && shownStocks.length > 0 && (
+                    <Card className="shadow">
+                      <Table
+                        className="align-items-center table-flush"
+                        responsive
+                      >
+                        <thead className="thead-light">
+                          <tr>
+                            <th scope="col">Symbol</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Today P/L</th>
+                            <th scope="col" style={{ width: '1px' }} />
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {shownStocks.map((s) => (
+                            <StockRow symbol={s} key={s} />
+                          ))}
+                        </tbody>
+                      </Table>
+                    </Card>
+                  )}
+                  {isLoading && <Loader />}
+                </div>
+              </InfiniteScroll>
             </Col>
           </Row>
         </Container>

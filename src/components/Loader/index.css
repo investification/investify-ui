@@ -18,16 +18,16 @@
 }
 .loader__coin {
   animation: flip 0.5s ease-in-out infinite alternate-reverse both;
-  color: #00cc79;
+  color: #40e0d0;
   font-size: 1.5rem;
-  border: 0.2rem solid #00cc79;
+  border: 0.2rem solid #40e0d0;
   line-height: 1;
   padding: 0.1rem 0.5rem;
   border-radius: 50%;
 }
 
 .loader__hand {
-  color: #00cc79;
+  color: #40e0d0;
   font-size: 3.5rem;
   margin-top: -2rem;
 }
