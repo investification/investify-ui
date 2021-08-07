@@ -98,10 +98,14 @@ function AddSymbolsPage() {
           addCompaniesInfo(
             likes.body.data.map((s) => ({ symbol: s, liked: true })),
           );
-          setStocksToLoad(likes.body.data);
-          return;
         }
-        setStocksToLoad(assets.body.data.slice(0, 50).map((s) => s.symbol));
+        const maxRetrieve = 50 - likes.body.data.length;
+        const toRetrieve = assets.body.data
+          .slice(0, maxRetrieve)
+          .map((s) => s.symbol)
+          .filter((s) => !likes.body.data.includes(s));
+        setStocksToLoad([...likes.body.data, ...toRetrieve]);
+        setStocksOffset(maxRetrieve);
       })
       .catch(console.error);
   }, [token]);
@@ -123,19 +127,7 @@ function AddSymbolsPage() {
     )
       .then((performances) => {
         addPerformancesInfo(performances.body);
-        if (stocksOffset === 0) {
-          setShownStocks([
-            ...addedStocks,
-            ...stocksToLoad.filter((s) => !addedStocks.includes(s)),
-          ]);
-          setStocksOffset(stocksToLoad.length);
-        } else {
-          setShownStocks([
-            ...shownStocks,
-            ...stocksToLoad.filter((s) => !addedStocks.includes(s)),
-          ]);
-          setStocksOffset(stocksOffset + stocksToLoad.length);
-        }
+        setShownStocks([...shownStocks, ...stocksToLoad]);
         setIsLoading(false);
       })
       .catch(console.error);
@@ -147,17 +139,20 @@ function AddSymbolsPage() {
     }
     const originalOffset = stocksOffset;
     let newOffset = stocksOffset + 50;
-    if (newOffset >= allAssets.length) {
-      setHasMore(false);
-      newOffset = allAssets.length;
-    }
     let assets = allAssets;
     if (query) {
       assets = assets.filter(filterAsset(query));
     }
+    if (newOffset >= assets.length) {
+      setHasMore(false);
+      newOffset = assets.length;
+    }
     setStocksOffset(newOffset);
     setStocksToLoad(
-      assets.slice(originalOffset, newOffset).map((s) => s.symbol),
+      assets
+        .slice(originalOffset, newOffset)
+        .map((s) => s.symbol)
+        .filter((s) => !shownStocks.includes(s)),
     );
   }
 
@@ -169,8 +164,15 @@ function AddSymbolsPage() {
       return setIsFirstLoad(false);
     }
     const results = allAssets.filter(filterAsset(query));
-    setStocksOffset(0);
-    setStocksToLoad(results.slice(0, 50).map((a) => a.symbol));
+    setShownStocks([]);
+    setStocksToLoad([
+      ...addedStocks,
+      ...results
+        .slice(0, 50 - addedStocks.length)
+        .map((a) => a.symbol)
+        .filter((s) => !addedStocks.includes(s)),
+    ]);
+    setStocksOffset(50 - addedStocks.length);
   }
 
   useEffect(search, [allAssets, query]);
@@ -236,44 +238,42 @@ function AddSymbolsPage() {
         <Container className="mt--7" fluid>
           <Row className="mt-5">
             <Col className="mb-5 mb-xl-0" xs="12">
-              <InfiniteScroll
-                dataLength={stocksOffset}
-                next={fetchNext}
-                hasMore={hasMore}
-              >
-                <div style={{ minHeight: '70vh' }}>
-                  {shownStocks && shownStocks.length > 0 && (
-                    <Card className="shadow">
-                      <Table
-                        className="align-items-center table-flush"
-                        responsive
-                      >
-                        <thead className="thead-light">
-                          <tr>
-                            <th scope="col">Symbol</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Today P/L</th>
-                            <th scope="col" style={{ width: '1px' }} />
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {shownStocks.map((s) => (
-                            <StockRow
-                              symbol={s}
-                              key={s}
-                              addFn={() => addStock(s)}
-                              added={addedStocks.includes(s)}
-                              removeFn={() => removeStock(s)}
-                            />
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Card>
-                  )}
-                  {isLoading && <Loader />}
-                </div>
-              </InfiniteScroll>
+              {shownStocks && shownStocks.length > 0 && (
+                <Card className="shadow">
+                  <InfiniteScroll
+                    dataLength={shownStocks.length}
+                    next={fetchNext}
+                    hasMore={hasMore}
+                  >
+                    <Table
+                      className="align-items-center table-flush"
+                      responsive
+                    >
+                      <thead className="thead-light">
+                        <tr>
+                          <th scope="col">Symbol</th>
+                          <th scope="col">Name</th>
+                          <th scope="col">Price</th>
+                          <th scope="col">Today P/L</th>
+                          <th scope="col" style={{ width: '1px' }} />
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {shownStocks.map((s) => (
+                          <StockRow
+                            symbol={s}
+                            key={s}
+                            addFn={() => addStock(s)}
+                            added={addedStocks.includes(s)}
+                            removeFn={() => removeStock(s)}
+                          />
+                        ))}
+                      </tbody>
+                    </Table>
+                  </InfiniteScroll>
+                </Card>
+              )}
+              {isLoading && <Loader />}
             </Col>
           </Row>
         </Container>

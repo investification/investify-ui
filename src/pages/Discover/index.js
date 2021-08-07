@@ -68,10 +68,6 @@ function DiscoverPage() {
           addCompaniesInfo(
             likes.body.data.map((s) => ({ symbol: s, liked: true })),
           );
-          if (!queryParams.q) {
-            setStocksToLoad(likes.body.data);
-          }
-          return;
         }
 
         if (!queryParams.q) {
@@ -79,7 +75,13 @@ function DiscoverPage() {
           if (queryParams && queryParams.q) {
             filteredAssets = filteredAssets.filter(filterAsset(queryParams.q));
           }
-          setStocksToLoad(filteredAssets.slice(0, 50).map((s) => s.symbol));
+          const maxRetrieve = 50 - likes.body.data.length;
+          filteredAssets = filteredAssets
+            .slice(0, maxRetrieve)
+            .map((s) => s.symbol)
+            .filter((s) => !likes.body.data.includes(s));
+          setStocksToLoad([...likes.body.data, ...filteredAssets]);
+          setStocksOffset(maxRetrieve);
         }
       })
       .catch(console.error);
@@ -102,13 +104,7 @@ function DiscoverPage() {
     )
       .then((performances) => {
         addPerformancesInfo(performances.body);
-        if (stocksOffset === 0) {
-          setShownStocks(stocksToLoad);
-          setStocksOffset(stocksToLoad.length);
-        } else {
-          setShownStocks([...shownStocks, ...stocksToLoad]);
-          setStocksOffset(stocksOffset + stocksToLoad.length);
-        }
+        setShownStocks([...shownStocks, ...stocksToLoad]);
         setIsLoading(false);
       })
       .catch(console.error);
@@ -120,17 +116,20 @@ function DiscoverPage() {
     }
     const originalOffset = stocksOffset;
     let newOffset = stocksOffset + 50;
-    if (newOffset >= allAssets.length) {
-      setHasMore(false);
-      newOffset = allAssets.length;
-    }
-    let assets = allAssets;
+    let assets = [...allAssets];
     if (queryParams && queryParams.q) {
       assets = assets.filter(filterAsset(queryParams.q));
     }
+    if (newOffset >= assets.length) {
+      setHasMore(false);
+      newOffset = assets.length;
+    }
     setStocksOffset(newOffset);
     setStocksToLoad(
-      assets.slice(originalOffset, newOffset).map((s) => s.symbol),
+      assets
+        .slice(originalOffset, newOffset)
+        .map((s) => s.symbol)
+        .filter((s) => !shownStocks.includes(s)),
     );
   }
 
@@ -142,12 +141,12 @@ function DiscoverPage() {
       return;
     }
     const results = allAssets.filter(filterAsset(queryParams.q));
-    setStocksOffset(0);
+    setShownStocks([]);
     setStocksToLoad(results.slice(0, 50).map((a) => a.symbol));
+    setStocksOffset(50);
   }
 
   useEffect(search, [allAssets, queryParams.q, isFirstLoad]);
-
   return (
     <>
       <Helmet>
@@ -197,38 +196,36 @@ function DiscoverPage() {
         <Container className="mt--7" fluid>
           <Row className="mt-5">
             <Col className="mb-5 mb-xl-0" xs="12">
-              <InfiniteScroll
-                dataLength={stocksOffset}
-                next={fetchNext}
-                hasMore={hasMore}
-              >
-                <div style={{ minHeight: '70vh' }}>
-                  {shownStocks && shownStocks.length > 0 && (
-                    <Card className="shadow">
-                      <Table
-                        className="align-items-center table-flush"
-                        responsive
-                      >
-                        <thead className="thead-light">
-                          <tr>
-                            <th scope="col">Symbol</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Today P/L</th>
-                            <th scope="col" style={{ width: '1px' }} />
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {shownStocks.map((s) => (
-                            <StockRow symbol={s} key={s} />
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Card>
-                  )}
-                  {isLoading && <Loader />}
-                </div>
-              </InfiniteScroll>
+              {shownStocks && shownStocks.length > 0 && (
+                <Card className="shadow">
+                  <InfiniteScroll
+                    dataLength={shownStocks.length}
+                    next={fetchNext}
+                    hasMore={hasMore}
+                  >
+                    <Table
+                      className="align-items-center table-flush"
+                      responsive
+                    >
+                      <thead className="thead-light">
+                        <tr>
+                          <th scope="col">Symbol</th>
+                          <th scope="col">Name</th>
+                          <th scope="col">Price</th>
+                          <th scope="col">Today P/L</th>
+                          <th scope="col" style={{ width: '1px' }} />
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {shownStocks.map((s) => (
+                          <StockRow symbol={s} key={s} />
+                        ))}
+                      </tbody>
+                    </Table>
+                  </InfiniteScroll>
+                </Card>
+              )}
+              {isLoading && <Loader />}
             </Col>
           </Row>
         </Container>

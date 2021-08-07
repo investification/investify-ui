@@ -12,8 +12,9 @@ import {
   Container,
   Row,
   Col,
+  Button,
 } from 'reactstrap';
-import {} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { chartExample3 } from '../../variables/charts';
 import { chartOptions, parseOptions } from '../../utils/charts/init';
@@ -22,6 +23,7 @@ import AppNavbar from '../../components/Navbars/AppNavbar';
 
 function SymbolPage(props) {
   const symbol = props.match.params.symbol;
+  const history = useHistory();
 
   if (window.Chart) {
     parseOptions(Chart, chartOptions());
@@ -40,7 +42,19 @@ function SymbolPage(props) {
       <AppNavbar activeTab="home" />
       <div className="header bg-gradient-info pb-8 pt-5 pt-md-8">
         <Container>
-          <Row></Row>
+          <Row>
+            <Col
+              xs="12"
+              className="d-flex justify-content-between align-items-center mt-3 mb-3"
+            >
+              <Button
+                className="btn-transparent text-white pl-0"
+                onClick={() => history.goBack()}
+              >
+                <i className="fas fa-arrow-left" /> Back
+              </Button>
+            </Col>
+          </Row>
         </Container>
       </div>
       <Container className="mt--7">
