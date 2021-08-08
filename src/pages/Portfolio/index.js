@@ -46,7 +46,9 @@ function PortfolioPage() {
     })
       .then(({ body }) => {
         body.data.forEach((p) => addPortfolio(p));
-        setFirstPortfolio(body.data[0].id);
+        if (!router.params.portfolio_id) {
+          setFirstPortfolio(body.data[0].id);
+        }
       })
       .catch(console.error);
   }, [token]);
@@ -163,7 +165,6 @@ function PortfolioPage() {
                           currentPortfolio.performances,
                         )}
                         options={options}
-                        getDatasetAtEvent={(e) => console.log(e)}
                       />
                     </div>
                   </CardBody>

@@ -1,30 +1,16 @@
 import moment from 'moment';
 import { colors } from './init';
 
-export default function performanceToChartData(performances) {
-  const labels = performances
-    .map((p) => moment(p.calculated_at).format('DD-MM-YYYY'))
-    .reverse();
-  const data = performances
-    .map(
-      (p) =>
-        Math.round(p.ownerships.reduce((acc, o) => o.amount + acc, 0) * 100) /
-        100,
-    )
-    .reverse();
-  const depositData = performances.map((p) => p.total_deposit).reverse();
+export default function barToChartData(bars) {
+  const labels = bars.map((b) => moment(b.timestamp).format('DD-MM-YYYY'));
+  const data = bars.map((b) => Math.round(b.price * 100) / 100);
   return function (canvas) {
     return {
       labels,
       datasets: [
         {
-          label: 'Net Asset Value',
+          label: 'Stock Price',
           data,
-        },
-        {
-          label: 'Total Deposit',
-          data: depositData,
-          borderColor: colors.theme.warning,
         },
       ],
     };
