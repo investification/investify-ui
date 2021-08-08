@@ -82,34 +82,6 @@ function PortfolioPage() {
           <Container className="mt--7">
             <Row>
               <Col className="mb-5 mb-xl-0" xs="12">
-                <Card className="bg-gradient-default shadow">
-                  <CardHeader className="bg-transparent">
-                    <Row className="align-items-center">
-                      <div className="col">
-                        <h6 className="text-uppercase text-light ls-1 mb-1">
-                          Overview
-                        </h6>
-                        <h2 className="text-white mb-0">Net Asset Value</h2>
-                      </div>
-                    </Row>
-                  </CardHeader>
-                  <CardBody>
-                    {/* Chart */}
-                    <div className="chart">
-                      <Line
-                        data={performanceToChartData(
-                          currentPortfolio.performances,
-                        )}
-                        options={options}
-                        getDatasetAtEvent={(e) => console.log(e)}
-                      />
-                    </div>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-            <Row className="mt-5">
-              <Col className="mb-5 mb-xl-0" xs="12">
                 <Card className="shadow">
                   <Table className="align-items-center table-flush" responsive>
                     <thead className="thead-light">
@@ -167,6 +139,34 @@ function PortfolioPage() {
                       ))}
                     </tbody>
                   </Table>
+                </Card>
+              </Col>
+            </Row>
+            <Row className="mt-xl-5 mt-1">
+              <Col className="mb-5 mb-xl-0" xs="12">
+                <Card className="bg-gradient-default shadow">
+                  <CardHeader className="bg-transparent">
+                    <Row className="align-items-center">
+                      <div className="col">
+                        <h6 className="text-uppercase text-light ls-1 mb-1">
+                          Overview
+                        </h6>
+                        <h2 className="text-white mb-0">Net Asset Value</h2>
+                      </div>
+                    </Row>
+                  </CardHeader>
+                  <CardBody>
+                    {/* Chart */}
+                    <div className="chart">
+                      <Line
+                        data={performanceToChartData(
+                          currentPortfolio.performances,
+                        )}
+                        options={options}
+                        getDatasetAtEvent={(e) => console.log(e)}
+                      />
+                    </div>
+                  </CardBody>
                 </Card>
               </Col>
             </Row>

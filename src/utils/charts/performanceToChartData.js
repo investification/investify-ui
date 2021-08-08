@@ -12,6 +12,7 @@ export default function performanceToChartData(performances) {
         100,
     )
     .reverse();
+  const depositData = performances.map((p) => p.total_deposit).reverse();
   return function (canvas) {
     return {
       labels,
@@ -19,6 +20,11 @@ export default function performanceToChartData(performances) {
         {
           label: 'Net Asset Value',
           data,
+        },
+        {
+          label: 'Total Deposit',
+          data: depositData,
+          borderColor: colors.theme.warning,
         },
       ],
     };
@@ -46,16 +52,35 @@ export const options = {
   tooltips: {
     callbacks: {
       label: function (item, data) {
-        var label = data.datasets[item.datasetIndex].label || '';
-        var yLabel = item.yLabel;
-        var content = '';
+        const label = data.datasets[item.datasetIndex].label || '';
+        const yLabel = item.yLabel;
+        let content = '';
 
         if (data.datasets.length > 1) {
-          content += label;
+          content += `${label} `;
         }
 
         content += '$' + yLabel + 'k';
         return content;
+      },
+      labelColor: function (item, data) {
+        if (
+          !data.tooltip._data ||
+          !data.tooltip._data.datasets ||
+          !data.tooltip._data.datasets[item.datasetIndex] ||
+          !data.tooltip._data.datasets[item.datasetIndex].borderColor
+        ) {
+          return {
+            borderColor: colors.theme.primary,
+            backgroundColor: colors.theme.primary,
+          };
+        }
+        return {
+          borderColor:
+            data.tooltip._data.datasets[item.datasetIndex].borderColor,
+          backgroundColor:
+            data.tooltip._data.datasets[item.datasetIndex].borderColor,
+        };
       },
     },
   },

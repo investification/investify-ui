@@ -155,7 +155,7 @@ export const colors = {
     info: '#11cdef',
     success: '#2dce89',
     danger: '#f5365c',
-    warning: '#fb6340',
+    warning: '#ffbf00',
   },
   black: '#12263F',
   white: '#FFFFFF',
