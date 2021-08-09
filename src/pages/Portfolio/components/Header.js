@@ -89,7 +89,7 @@ const Header = ({ portfolios }) => {
                           />{' '}
                           {Math.abs(p.up)}%
                         </span>{' '}
-                        <span className="text-nowrap">Since yesterday</span>
+                        <span className="text-nowrap">last trading</span>
                       </p>
                     </CardBody>
                   </Card>

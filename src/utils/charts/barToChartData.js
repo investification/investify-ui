@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { colors } from './init';
 
-export default function barToChartData(bars) {
+export function barToChartData(bars) {
   const labels = bars.map((b) => moment(b.timestamp).format('DD-MM-YYYY'));
   const data = bars.map((b) => Math.round(b.price * 100) / 100);
   return function (canvas) {
@@ -17,7 +17,7 @@ export default function barToChartData(bars) {
   };
 }
 
-export const options = {
+export const barToOptions = (bars) => ({
   scales: {
     yAxes: [
       {
@@ -29,6 +29,8 @@ export const options = {
           callback: function (value) {
             return '$' + value;
           },
+          min: Math.min(...bars.map((b) => Math.floor(b.price))),
+          max: Math.max(...bars.map((b) => Math.ceil(b.price))),
         },
       },
     ],
@@ -68,4 +70,4 @@ export const options = {
       },
     },
   },
-};
+});

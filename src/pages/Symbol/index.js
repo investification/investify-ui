@@ -13,7 +13,10 @@ import {
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { chartOptions, parseOptions } from '../../utils/charts/init';
-import barToChartData, { options } from '../../utils/charts/barToChartData';
+import {
+  barToChartData,
+  barToOptions,
+} from '../../utils/charts/barToChartData';
 
 import AppNavbar from '../../components/Navbars/AppNavbar';
 import fetchWithHttpErr, { getAuthHeader } from '../../utils/fetchWithHttpErr';
@@ -148,7 +151,10 @@ function SymbolPage(props) {
                   <CardBody>
                     {/* Chart */}
                     <div className="chart">
-                      <Line data={barToChartData(bars)} options={options} />
+                      <Line
+                        data={barToChartData(bars)}
+                        options={barToOptions(bars)}
+                      />
                     </div>
                   </CardBody>
                 </Card>
