@@ -8,8 +8,11 @@ export default function performanceToChartData(performances) {
   const data = performances
     .map(
       (p) =>
-        Math.round(p.ownerships.reduce((acc, o) => o.amount + acc, 0) * 100) /
-        100,
+        Math.round(
+          (p.ownerships.reduce((acc, o) => o.amount + acc, 0) +
+            p.waiting_buy_orders.reduce((acc, o) => acc + o.amount, 0)) *
+            100,
+        ) / 100,
     )
     .reverse();
   const depositData = performances.map((p) => p.total_deposit).reverse();
