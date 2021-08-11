@@ -69,7 +69,7 @@ const Summary = () => {
       }),
     ])
       .then(([newComposition, profile]) => {
-        addPortfolio(newComposition.body);
+        addPortfolio(newComposition.body, true);
         if (profile.body.linked_with_bank) {
           history.push('/');
           return;

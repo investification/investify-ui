@@ -26,7 +26,6 @@ const Auth = () => {
 
   const { token } = useToken();
   if (token && match.path.includes('auth')) {
-    console.log(token);
     useHistory().push('/');
   }
   return (
