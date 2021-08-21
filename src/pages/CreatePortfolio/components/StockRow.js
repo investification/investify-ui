@@ -75,6 +75,7 @@ const StockRow = ({ symbol, added, addFn, removeFn }) => {
           color="success"
           size="sm"
           className="d-sm-none"
+          outline={!added}
           onClick={added ? removeFn : addFn}
         >
           {added ? (
