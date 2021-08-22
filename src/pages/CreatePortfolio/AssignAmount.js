@@ -95,8 +95,7 @@ const AssignAmount = () => {
                 <Row className="d-flex">
                   <Col xs="8">
                     <Label>
-                      <Badge color="success">{symbol}</Badge>&nbsp;&nbsp;
-                      {fundData.stocks[symbol]}
+                      <Badge color="success">{symbol}</Badge>
                     </Label>
                   </Col>
                   <Col xs="4">
